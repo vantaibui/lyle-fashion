@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js and Storybook output
+.next/
+.next-playwright/
+out/
+storybook-static/
+
+# tests
+coverage/
+playwright-report/
+test-results/
+
+# local environments and secrets
+.env
+.env.*
+!.env.example
+
+# tooling
+*.tsbuildinfo
+.turbo/
+.eslintcache
+pnpm-debug.log*
+
+# operating systems and editors
+.DS_Store
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

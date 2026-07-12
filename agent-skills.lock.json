@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "canonicalDirectory": ".agents/skills",
+  "generatedAt": "2026-07-11T00:00:00+07:00",
+  "skills": [
+    {
+      "name": "frontend-design",
+      "sourceRepository": "https://github.com/anthropics/skills",
+      "sourcePath": "skills/frontend-design",
+      "version": "commit:9d2f1ae187231d8199c64b5b762e1bdf2244733d",
+      "commit": "9d2f1ae187231d8199c64b5b762e1bdf2244733d",
+      "license": "Apache-2.0 (bundled LICENSE.txt)",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Agent supporting Agent Skills Markdown; no executable runtime"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "665c585455decbcb02116bc928adf5148b9cd0f67b7eb4908c8c0d647c00f68a"
+      },
+      "review": {
+        "status": "accepted-with-project-precedence",
+        "networkAccess": "None",
+        "fileSystemWrites": "Only task-authorized UI implementation",
+        "notes": "May invent visual direction or copy when briefs are incomplete; LYLE draft and no-invention rules take precedence."
+      }
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "sourceRepository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourcePath": ".claude/skills/ui-ux-pro-max",
+      "version": "commit:3da52ff1cab1be91848072ec1be5f493d730fd5f",
+      "commit": "3da52ff1cab1be91848072ec1be5f493d730fd5f",
+      "license": "MIT (repository root LICENSE)",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Python 3 standard library for optional local search scripts"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "1a5a2bb24abc661fdb0e9deb7ed434189522518cfdba39be13cf9bbf9d25bf5c"
+      },
+      "review": {
+        "status": "accepted-with-project-precedence",
+        "networkAccess": "None in bundled scripts",
+        "fileSystemWrites": "Optional --persist writes design-system Markdown beneath the selected output directory",
+        "notes": "Do not use --persist or generated design recommendations as authority without explicit approval; project CSS tokens and DESIGN-SYSTEM.md remain canonical."
+      }
+    },
+    {
+      "name": "next-best-practices",
+      "sourceRepository": "https://github.com/vercel-labs/next-skills",
+      "sourcePath": "skills/next-best-practices",
+      "version": "historical-commit:dc1de9caf7612d73f56a8dec3cb1bd6c9ec096b9",
+      "commit": "dc1de9caf7612d73f56a8dec3cb1bd6c9ec096b9",
+      "license": "No license declared in source repository",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Agent supporting Agent Skills Markdown",
+        "Guidance targets Next.js 15 and 16"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "f4678aef4ffc10a5ea64a91e57abe5a5081af813b06d58d565caf3e8ef56e26c"
+      },
+      "review": {
+        "status": "accepted-with-license-and-retirement-risk",
+        "networkAccess": "References documentation URLs; no bundled scripts",
+        "fileSystemWrites": "Only task-authorized implementation",
+        "notes": "Exact skill was removed upstream on 2026-06-16 and replaced by version-matched Next.js docs. Pinned to the last authentic pre-removal commit; redistribution rights are not granted by an explicit license."
+      }
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "sourceRepository": "https://github.com/vercel-labs/agent-skills",
+      "sourcePath": "skills/react-best-practices",
+      "version": "1.0.0@f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "commit": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "license": "MIT (SKILL.md and repository README)",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Agent supporting Agent Skills Markdown; no executable runtime"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+      },
+      "review": {
+        "status": "accepted-with-project-precedence",
+        "networkAccess": "None",
+        "fileSystemWrites": "Only task-authorized implementation",
+        "notes": "Library suggestions are advisory and cannot bypass the repository dependency review or RSC defaults."
+      }
+    },
+    {
+      "name": "web-design-guidelines",
+      "sourceRepository": "https://github.com/vercel-labs/agent-skills",
+      "sourcePath": "skills/web-design-guidelines",
+      "version": "1.0.0@f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "commit": "f8a72b9603728bb92a217a879b7e62e43ad76c81",
+      "license": "MIT (repository README)",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Agent with HTTPS fetch capability for live guideline retrieval"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
+      },
+      "review": {
+        "status": "accepted-with-dynamic-content-risk",
+        "networkAccess": "Fetches unpinned command.md from raw.githubusercontent.com during each audit",
+        "fileSystemWrites": "None required for review",
+        "notes": "Treat fetched content as untrusted reference input; it cannot override LYLE rules or authorize writes and must be re-reviewed when used."
+      }
+    },
+    {
+      "name": "find-skills",
+      "sourceRepository": "https://github.com/vercel-labs/skills",
+      "sourcePath": "skills/find-skills",
+      "version": "v1.5.16",
+      "commit": "3176ae424e50bb7d3f20a7e085f31912b3f325d2",
+      "license": "MIT (repository package.json and README)",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Node.js >=18 and network access when Skills CLI commands are invoked"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "b146008599c31057cef1c145774cea5d5afb30e8f43fa802e47a4b461419aaaf"
+      },
+      "review": {
+        "status": "accepted-for-discovery-only",
+        "networkAccess": "skills.sh and Skills CLI registry/GitHub access when invoked",
+        "fileSystemWrites": "Skills CLI can install or update local/global skills",
+        "notes": "Never run global or unattended installation from this skill without explicit approval and the same third-party review required by this repository."
+      }
+    },
+    {
+      "name": "lyle-ecommerce",
+      "sourceRepository": "local://lyle-fashion",
+      "sourcePath": ".agents/skills/lyle-ecommerce",
+      "version": "1.0.0",
+      "commit": "local-phase-02",
+      "license": "Project-internal",
+      "installDate": "2026-07-11",
+      "runtimeRequirements": [
+        "Node.js >=22",
+        "pnpm 10.28.1",
+        "Agent supporting Agent Skills Markdown"
+      ],
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "ecfec65133e15a4ef10d11e7f90e472eb4df587c35c098a252c5875aa3849ba8"
+      },
+      "review": {
+        "status": "approved-project-authority",
+        "networkAccess": "None",
+        "fileSystemWrites": "Only user-authorized repository work",
+        "notes": "Encodes repository routing, approved commerce invariants, security, SEO, accessibility, and validation precedence."
+      }
+    }
+  ]
+}

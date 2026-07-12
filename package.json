@@ -1,0 +1,72 @@
+{
+  "name": "lyle-fashion-storefront",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LYLE Fashion storefront foundation",
+  "packageManager": "pnpm@10.28.1",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "skills:setup": "node scripts/setup-agent-skills.mjs",
+    "skills:verify": "node scripts/verify-agent-skills.mjs",
+    "skills:check": "pnpm dlx skills check",
+    "skills:update": "pnpm dlx skills update",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "prettier --check . && eslint . --max-warnings=0 && tsc --noEmit && vitest run",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "server-only": "0.0.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@storybook/addon-a11y": "10.5.0",
+    "@storybook/nextjs-vite": "10.5.0",
+    "@tailwindcss/postcss": "4.3.2",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.6.1",
+    "@types/node": "26.1.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.2.10",
+    "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "jsdom": "29.1.1",
+    "lint-staged": "16.4.0",
+    "postcss": "8.5.16",
+    "prettier": "3.9.5",
+    "prettier-plugin-tailwindcss": "0.8.0",
+    "storybook": "10.5.0",
+    "tailwindcss": "4.3.2",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "eslint --fix --max-warnings=0",
+      "prettier --write"
+    ],
+    "*.{json,md,mdx,css,yml,yaml}": "prettier --write"
+  }
+}

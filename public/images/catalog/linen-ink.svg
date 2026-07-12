@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" role="img" aria-labelledby="title">
+  <title id="title">Minh họa trang phục Linen màu mực</title>
+  <rect width="1200" height="1500" fill="#e5e0d5"/>
+  <path d="M356 260 504 176h192l148 84 136 296-164 70-74-148v708H458V478l-74 148-164-70 136-296Z" fill="#20211d"/>
+  <path d="M504 176c18 82 174 82 192 0" fill="none" stroke="#777269" stroke-width="10"/>
+  <path d="M458 720h284M458 742h284M458 764h284" stroke="#494740" stroke-width="4"/>
+</svg>

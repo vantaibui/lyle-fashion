@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" role="img" aria-labelledby="title">
+  <title id="title">Minh họa cận cảnh bề mặt vải</title>
+  <rect width="1200" height="1500" fill="#d9cfb8"/>
+  <g stroke="#777269" stroke-width="3" opacity=".35">
+    <path d="M0 80h1200M0 160h1200M0 240h1200M0 320h1200M0 400h1200M0 480h1200M0 560h1200M0 640h1200M0 720h1200M0 800h1200M0 880h1200M0 960h1200M0 1040h1200M0 1120h1200M0 1200h1200M0 1280h1200M0 1360h1200M0 1440h1200"/>
+    <path d="M80 0v1500M160 0v1500M240 0v1500M320 0v1500M400 0v1500M480 0v1500M560 0v1500M640 0v1500M720 0v1500M800 0v1500M880 0v1500M960 0v1500M1040 0v1500M1120 0v1500"/>
+  </g>
+</svg>

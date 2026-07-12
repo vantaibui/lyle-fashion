@@ -1,0 +1,4 @@
+interface:
+  display_name: "LYLE E-commerce"
+  short_description: "LYLE storefront architecture and domain rules"
+  default_prompt: "Use $lyle-ecommerce to implement LYLE storefront work within approved architecture and business rules."

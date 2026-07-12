@@ -1,0 +1,14 @@
+.next
+.next-playwright
+.agents/skills
+.claude/skills
+.codex/skills
+.cursor/skills
+.github/skills
+coverage
+node_modules
+next-env.d.ts
+playwright-report
+pnpm-lock.yaml
+storybook-static
+test-results

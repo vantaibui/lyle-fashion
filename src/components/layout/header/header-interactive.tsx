@@ -1,6 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { ActionLink } from '@/components/layout/header/action-link';
@@ -74,6 +76,11 @@ export function HeaderInteractive({
   groups,
   wishlistCount,
 }: HeaderInteractiveProps) {
+  const pathname = usePathname();
+  // On the cart and checkout pages the drawer would overlay a dedicated cart
+  // surface, so the icon links to the full cart page instead of opening the
+  // drawer. Everywhere else the icon opens the drawer.
+  const isCartSurface = pathname === '/cart' || pathname === '/checkout';
   const [cartState, setCartState] = useState<CartResponse>(emptyCartSnapshot);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -120,8 +127,14 @@ export function HeaderInteractive({
 
   return (
     <>
-      <div className="hidden xl:block">
+      <div className="hidden items-center gap-1 xl:flex">
         <DesktopNavigation groups={groups} />
+        <Link
+          className="text-brand-sale hover:bg-sale-surface flex min-h-11 items-center px-4 text-sm font-semibold tracking-wide uppercase transition-colors duration-[var(--duration-fast)]"
+          href="/collections/sale"
+        >
+          Sale 50%
+        </Link>
       </div>
       <div className="ml-auto flex items-center gap-2">
         <MobileNavigation groups={groups} />
@@ -147,19 +160,25 @@ export function HeaderInteractive({
             <HeartIcon />
           </ActionLink>
         </span>
-        <CartTriggerButton
-          count={cartCount}
-          label="Giỏ hàng"
-          onClick={() => setIsCartOpen(true)}
-        />
+        {isCartSurface ? (
+          <CartTriggerButton count={cartCount} href="/cart" label="Giỏ hàng" />
+        ) : (
+          <CartTriggerButton
+            count={cartCount}
+            label="Giỏ hàng"
+            onClick={() => setIsCartOpen(true)}
+          />
+        )}
       </div>
       <SearchOverlay isOpen={isSearchOpen} onClose={closeSearch} />
-      <CartDrawer
-        initialCart={cartState.cart}
-        initialFreeShippingProgress={cartState.freeShippingProgress}
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-      />
+      {!isCartSurface && (
+        <CartDrawer
+          initialCart={cartState.cart}
+          initialFreeShippingProgress={cartState.freeShippingProgress}
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+        />
+      )}
     </>
   );
 }

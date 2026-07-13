@@ -4,6 +4,10 @@
 
 All routes remain `noindex` until launch prerequisites in `SEO-STRATEGY.md` are approved. Placeholder routes contain no fake commerce content.
 
+> **Academic demo note:** `/` currently renders an elise.vn-styled homepage with demo
+> content instead of a placeholder. This is a non-production course exercise; see
+> `ELISE-REDESIGN.md`. It does not change the approved rendering targets below.
+
 | Route                                | Rendering and cache               | Revalidation                         | Personalization / SEO                                           | Error behavior                                              |
 | ------------------------------------ | --------------------------------- | ------------------------------------ | --------------------------------------------------------------- | ----------------------------------------------------------- |
 | `/`                                  | ISR target                        | Time-based after CMS contract        | Public; canonical and indexable only at launch                  | Storefront loading/error; CMS fallback                      |

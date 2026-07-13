@@ -76,7 +76,7 @@ a {
 
 ::selection {
   background: var(--palette-brand-flax);
-  color: var(--palette-brand-ink);
+  color: var(--palette-neutral-0);
 }
 
 @keyframes lyle-dialog-in {

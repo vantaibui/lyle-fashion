@@ -1,38 +1,42 @@
 :root {
   color-scheme: light;
 
-  /* LYLE Quiet Premium palette: ink, bone, flax, moss, clay. */
-  --palette-brand-ink: #20211d;
-  --palette-brand-bone: #f7f5ef;
-  --palette-brand-flax: #d9cfb8;
-  --palette-brand-moss: #4e5a42;
+  /* elise.vn pixel-match palette: near-black ink, white bone, gold accent, coral sale. */
+  --palette-brand-ink: #2b2b2b;
+  --palette-brand-bone: #ffffff;
+  --palette-brand-flax: #a68242;
+  --palette-brand-moss: #a68242;
   --palette-brand-clay: #8a5a44;
+  --palette-brand-sale: #f96c6c;
 
   --palette-neutral-0: #ffffff;
-  --palette-neutral-50: #fbfaf7;
-  --palette-neutral-100: #f3f0e8;
-  --palette-neutral-200: #e5e0d5;
-  --palette-neutral-300: #cbc4b7;
-  --palette-neutral-500: #777269;
-  --palette-neutral-700: #494740;
-  --palette-neutral-900: #20211d;
+  --palette-neutral-50: #fafafa;
+  --palette-neutral-100: #f7f7f7;
+  --palette-neutral-200: #f1f1f1;
+  --palette-neutral-300: #dcdcdc;
+  --palette-neutral-500: #878787;
+  --palette-neutral-700: #5f5f5f;
+  --palette-neutral-900: #2b2b2b;
 
   --semantic-background: var(--palette-brand-bone);
   --semantic-surface: var(--palette-neutral-0);
   --semantic-surface-subtle: var(--palette-neutral-50);
   --semantic-surface-muted: var(--palette-neutral-100);
   --semantic-surface-inverse: var(--palette-brand-ink);
-  --semantic-text: var(--palette-brand-ink);
+  --semantic-text: #666666;
+  --semantic-text-strong: var(--palette-brand-ink);
   --semantic-text-muted: var(--palette-neutral-700);
   --semantic-text-subtle: var(--palette-neutral-500);
-  --semantic-text-inverse: var(--palette-brand-bone);
+  --semantic-text-inverse: var(--palette-neutral-0);
   --semantic-border: var(--palette-neutral-300);
   --semantic-border-subtle: var(--palette-neutral-200);
   --semantic-border-strong: var(--palette-brand-ink);
   --semantic-action: var(--palette-brand-ink);
-  --semantic-action-hover: #363832;
-  --semantic-action-active: #11120f;
-  --semantic-action-muted: var(--palette-brand-moss);
+  --semantic-action-hover: #000000;
+  --semantic-action-active: #000000;
+  --semantic-action-muted: var(--palette-brand-flax);
+  --semantic-sale: var(--palette-brand-sale);
+  --semantic-sale-surface: #fdecec;
   --semantic-focus: #305caa;
   --semantic-success: #3f633d;
   --semantic-success-surface: #edf4ea;
@@ -46,14 +50,16 @@
   --semantic-skeleton: var(--palette-neutral-200);
   --semantic-skeleton-highlight: var(--palette-neutral-100);
 
+  /* elise.vn uses a clean sans (Helvetica Neue) throughout — no display serif. */
   --font-family-display:
-    'Noto Serif', 'DejaVu Serif', Georgia, 'Times New Roman', serif;
+    'Helvetica Neue', 'Be Vietnam Pro', 'Noto Sans', system-ui, -apple-system,
+    'Segoe UI', Arial, sans-serif;
   --font-family-body:
-    'Be Vietnam Pro', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Arial,
-    sans-serif;
+    'Helvetica Neue', 'Be Vietnam Pro', 'Noto Sans', system-ui, -apple-system,
+    'Segoe UI', Arial, sans-serif;
   --font-family-ui:
-    'Be Vietnam Pro', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Arial,
-    sans-serif;
+    'Helvetica Neue', 'Be Vietnam Pro', 'Noto Sans', system-ui, -apple-system,
+    'Segoe UI', Arial, sans-serif;
 
   --font-size-2xs: 0.6875rem;
   --font-size-xs: 0.75rem;
@@ -70,10 +76,10 @@
   --weight-semibold: 600;
   --weight-bold: 700;
   --line-height-none: 1;
-  --line-height-tight: 1.12;
-  --line-height-snug: 1.3;
-  --line-height-normal: 1.55;
-  --line-height-relaxed: 1.7;
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.4;
+  --line-height-normal: 1.75;
+  --line-height-relaxed: 1.9;
   --letter-spacing-tight: -0.025em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.04em;
@@ -149,12 +155,14 @@
   --color-brand-flax: var(--palette-brand-flax);
   --color-brand-moss: var(--palette-brand-moss);
   --color-brand-clay: var(--palette-brand-clay);
+  --color-brand-sale: var(--palette-brand-sale);
   --color-background: var(--semantic-background);
   --color-surface: var(--semantic-surface);
   --color-surface-subtle: var(--semantic-surface-subtle);
   --color-surface-muted: var(--semantic-surface-muted);
   --color-surface-inverse: var(--semantic-surface-inverse);
   --color-text: var(--semantic-text);
+  --color-text-strong: var(--semantic-text-strong);
   --color-text-muted: var(--semantic-text-muted);
   --color-text-subtle: var(--semantic-text-subtle);
   --color-text-inverse: var(--semantic-text-inverse);
@@ -165,6 +173,8 @@
   --color-action-hover: var(--semantic-action-hover);
   --color-action-active: var(--semantic-action-active);
   --color-action-muted: var(--semantic-action-muted);
+  --color-sale: var(--semantic-sale);
+  --color-sale-surface: var(--semantic-sale-surface);
   --color-focus: var(--semantic-focus);
   --color-success: var(--semantic-success);
   --color-success-surface: var(--semantic-success-surface);

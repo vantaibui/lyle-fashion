@@ -2,6 +2,10 @@
 
 **Status: DRAFT — recommended sequencing pending product, operations and vendor approval.**
 
+> **Academic demo note:** an elise.vn-styled homepage/footer redesign exists as a
+> non-production course exercise (see `ELISE-REDESIGN.md`). It is a visual demo only and
+> does not fulfill, reprioritize, or gate any roadmap item below.
+
 ## Prioritization principles
 
 - MVP must support a complete, supportable browse-to-order journey, not every listed feature.

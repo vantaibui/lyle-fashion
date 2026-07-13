@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 
 import { Price } from '@/components/ui/price';
 import { QuantitySelector } from '@/components/ui/quantity-selector';
@@ -21,17 +22,26 @@ export function CartLineItem({
   onQuantityChange,
   onRemove,
 }: CartLineItemProps) {
+  const [imageError, setImageError] = useState(false);
+  const hasImage = Boolean(line.imageSrc) && !imageError;
   return (
     <article className="border-border-subtle grid gap-4 border-b pb-5">
       <div className="grid gap-4 sm:grid-cols-[6rem_minmax(0,1fr)]">
         <div className="bg-surface-muted relative aspect-[4/5] overflow-hidden">
-          <Image
-            alt={line.imageAlt}
-            className="object-cover"
-            fill
-            sizes="96px"
-            src={line.imageSrc}
-          />
+          {hasImage ? (
+            <Image
+              alt={line.imageAlt}
+              className="object-cover"
+              fill
+              onError={() => setImageError(true)}
+              sizes="96px"
+              src={line.imageSrc}
+            />
+          ) : (
+            <span className="text-text-subtle text-2xs absolute inset-0 grid place-items-center px-1 text-center">
+              Không có ảnh
+            </span>
+          )}
         </div>
         <div className="grid gap-3">
           <div className="grid gap-1">
@@ -87,10 +97,10 @@ export function CartLineItem({
               Thành tiền: <Price amount={line.lineTotal} />
             </p>
           </div>
-          <div className="flex flex-wrap gap-3 text-sm">
+          <div className="flex flex-wrap items-center gap-4 text-sm">
             {onRemove ? (
               <button
-                className="underline-offset-4 hover:underline"
+                className="text-text-muted hover:text-danger inline-flex min-h-11 cursor-pointer items-center underline-offset-4 transition-colors duration-[var(--duration-fast)] hover:underline"
                 onClick={() => onRemove(line.lineId)}
                 type="button"
               >
@@ -99,14 +109,13 @@ export function CartLineItem({
             ) : null}
             {onMoveToWishlist ? (
               <button
-                className="underline-offset-4 hover:underline"
+                className="text-text-muted hover:text-text inline-flex min-h-11 cursor-pointer items-center underline-offset-4 transition-colors duration-[var(--duration-fast)] hover:underline"
                 onClick={() => onMoveToWishlist(line.lineId)}
                 type="button"
               >
                 Chuyển sang yêu thích
               </button>
             ) : null}
-            <span className="text-text-subtle">SKU: {line.skuId}</span>
           </div>
         </div>
       </div>

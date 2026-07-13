@@ -84,3 +84,16 @@ Current same-origin commerce endpoints are foundation-only contracts:
 - `POST /api/checkout` requires `x-idempotency-key`, validates the checkout payload, confirms cart/shipping state, creates at most one order per attempt, and returns a safe application redirect to `/order-success`.
 
 Remaining production dependencies: durable cart/order persistence, authenticated customer identity, backend merge orchestration, approved promotion engine, tax semantics, logistics quoting, real payment callbacks, and payment-status recovery rules.
+
+## Admin foundation
+
+Admin endpoints are a distinct credential/cache class from storefront endpoints — see `docs/ADMIN-ARCHITECTURE.md` for the full authentication boundary and `docs/ADMIN-PERMISSIONS.md` for the authorization model.
+
+- `POST /api/admin/auth/login` and `POST /api/admin/auth/logout` are the only admin route handlers in this phase. Login validates against `adminLoginSchema`, authenticates through the isolated development adapter (`src/modules/admin-auth/server/admin-auth-store.ts`), and sets `lyle_admin_session` (`HttpOnly`, `SameSite=Strict`, 4-hour TTL). Both responses use `Cache-Control: private, no-store`.
+- Every admin Server Component route (`/admin`, `/admin/products`, `/admin/products/[productId]`, `/admin/orders`, `/admin/orders/[orderId]`, `/admin/audit-log`) reads data through a typed provider contract with a development mock adapter, following the same pattern as `src/modules/catalog`:
+  - `DashboardSnapshotProvider` (`src/modules/admin-dashboard/contracts/dashboard.ts`) — operational counters (all zero in the mock, since no OMS/WMS/promotion backend is connected) plus real recent audit-log entries.
+  - `AdminProductListProvider` / `AdminProductDetailProvider` (`src/modules/admin-product/contracts/`) — server-paginated product list and per-product detail including variants/inventory.
+  - `AdminOrderListProvider` / `AdminOrderDetailProvider` (`src/modules/admin-order/contracts/admin-order.ts`) — server-paginated order list and read-only order detail. List rows carry a masked `customerSummary`, never raw contact/address data.
+  - `AuditLogWriter` / `AuditLogReader` (`src/modules/admin-auth/contracts/audit-log.ts`) — append-style write and paginated read; the current implementation is an in-memory, single-process development store, explicitly not durable or cross-instance.
+- No admin mutation endpoints exist yet (product save/publish, inventory adjustment, order status transitions, admin-user management). `docs/ADMIN-ROADMAP.md` sequences these; each will require `assertAdminPermission` plus the same idempotency/validation posture already required of storefront mutations.
+- Admin order/payment/fulfillment status enums (`src/modules/admin-order/contracts/admin-order.ts`) follow the fuller proposed state machine in `docs/STATUS-TRANSITIONS.md` rather than the narrower Phase 11 storefront-local contract, because admin operators need the documented set even though it remains DRAFT pending backend approval.

@@ -2,6 +2,11 @@
 
 **Status:** APPROVED FOUNDATION; domain integrations remain DRAFT.
 
+> **Academic demo note:** an elise.vn-styled homepage and footer (`src/modules/marketing/`,
+> `src/components/layout/footer/`) have been added as a non-production course exercise with
+> demo content. It follows the ownership/boundary rules below but departs from the approved
+> visual direction. See `ELISE-REDESIGN.md`.
+
 ## Runtime model
 
 LYLE Fashion uses Next.js App Router, React and strict TypeScript on the default Node.js runtime. Routes are React Server Components unless browser state, effects or event handlers require a narrow client boundary. Route groups `(storefront)` and `(account)` organize URL ownership without changing public paths.

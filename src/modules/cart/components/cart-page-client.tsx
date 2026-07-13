@@ -200,7 +200,7 @@ export function CartPageClient({
                 >
                   <span>{promotion.code}</span>
                   <button
-                    className="underline-offset-4 hover:underline"
+                    className="text-text-muted hover:text-danger inline-flex min-h-11 cursor-pointer items-center underline-offset-4 transition-colors duration-[var(--duration-fast)] hover:underline"
                     onClick={() => void handleRemovePromotion(promotion.code)}
                     type="button"
                   >

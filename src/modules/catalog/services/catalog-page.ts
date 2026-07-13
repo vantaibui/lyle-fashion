@@ -46,6 +46,7 @@ function toCatalogQuery(
     pageSize: catalogConfig.pageSize,
     priceTier: params.priceTier,
     promotion: params.promotion,
+    q: params.q,
     size: params.size,
     sort:
       !params.sort || params.sort === 'relevance' ? 'recommended' : params.sort,

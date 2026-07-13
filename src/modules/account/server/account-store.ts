@@ -66,7 +66,7 @@ const demoOrders: PublicOrder[] = [
     lines: [
       {
         imageAlt: 'Áo sơ mi Linen màu tự nhiên',
-        imageSrc: '/images/product-placeholder.svg',
+        imageSrc: '/elise/products/product-06.jpg',
         lineId: 'order-line-1',
         lineTotal: 399000,
         price: 399000,

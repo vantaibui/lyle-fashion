@@ -42,6 +42,17 @@ Never log credentials, tokens, cookies, authorization headers, payment data, per
 
 Authentication, RBAC, CSRF implementation, rate limiting, privacy/retention, consent, monitoring, dependency scanning and incident response require backend/deployment decisions. Threat-model checkout, payment callbacks, previews and all personal-data flows before implementation.
 
+## Admin authentication and authorization controls
+
+- Admin staff sessions are structurally isolated from storefront customer sessions: separate cookie name (`lyle_admin_session` vs. `lyle_session`), separate session contract, separate credential store (`src/modules/admin-auth/server/admin-auth-store.ts`). Neither `requireAuth` nor `requireAdminAuth` accepts the other's cookie; this is unit-tested.
+- Admin session cookie uses `SameSite=Strict` (stricter than the storefront's `Lax`) and a shorter 4-hour TTL, reflecting the higher sensitivity of staff access.
+- Every admin route calls `requireAdminAuth` (redirects to `/admin/login` when unauthenticated) and, where the route is permission-scoped, `requirePagePermission` (redirects to `/admin/forbidden` when authenticated but unauthorized). These are distinct states by design, matching "distinguish no data from denied access."
+- Permissions are enforced server-side via `assertAdminPermission`/`requirePagePermission`, never by hiding a UI control. Navigation filtering (`hasAdminPermission`) is a UX convenience only.
+- The current admin authentication adapter is an explicit development fixture, isolated from the storefront's, and must not receive real staff credentials. Production requires an approved staff identity provider with MFA, session, and network requirements (`docs/OPEN-QUESTIONS.md` `ADM-01`/`ADM-03`) before any real admin access is granted.
+- Admin routes set `robots: { index: false, follow: false }` via `createRouteMetadata`'s default `indexable: false`, and mutating/private admin API responses use `Cache-Control: private, no-store`, matching the storefront's private-route pattern.
+- Order-list and order-detail views expose only masked customer summaries (e.g., `"Khách hàng L*** (090***4567)"`), not full name/phone/email/address, per "do not expose unnecessary PII in list views."
+- The audit-log contract (`src/modules/admin-auth/contracts/audit-log.ts`) restricts `safeSummary`/`previousValue`/`newValue` to fields approved for audit exposure; it must never carry secrets, payment data, or full customer PII. The current in-memory store is a development-only foundation with the same durability/cross-instance caveats as the Phase 11 storefront adapters — see the inline documentation at `src/modules/admin-auth/server/admin-auth-store.ts` for a specific multi-worker in-memory session caveat found and fixed during Phase 12.
+
 ## Cart and checkout foundation controls
 
 - Guest cart identity uses an opaque httpOnly cookie. Browser code does not store payment data, full address, phone, email, customer identity, or secrets for cart restoration.

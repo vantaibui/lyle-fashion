@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -7,11 +7,15 @@ import type { ProductSummary } from '@/modules/catalog/contracts/catalog';
 
 import { ProductCard } from './product-card';
 
-const { quickAdd, wishlist } = vi.hoisted(() => ({
+const { quickAdd, wishlist, routerPush } = vi.hoisted(() => ({
   quickAdd: vi.fn(),
   wishlist: vi.fn(),
+  routerPush: vi.fn(),
 }));
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPush }),
+}));
 vi.mock('@/modules/cart/api/quick-add-client', () => ({
   quickAddToCart: quickAdd,
 }));
@@ -81,11 +85,12 @@ describe('ProductCard', () => {
     expect(screen.getByRole('button', { name: 'Hết hàng' })).toBeDisabled();
   });
 
-  it('requires an explicit available size before quick add', async () => {
+  it('requires an explicit available size before buy now', async () => {
     const user = userEvent.setup();
     render(<ProductCard product={product} />);
-    await user.click(screen.getByRole('button', { name: 'Thêm nhanh' }));
-    await user.click(screen.getByRole('button', { name: 'Thêm vào giỏ' }));
+    await user.click(screen.getByRole('button', { name: 'Mua ngay' }));
+    const dialog = screen.getByRole('dialog');
+    await user.click(within(dialog).getByRole('button', { name: 'Mua ngay' }));
     expect(screen.getByRole('alert')).toHaveTextContent(
       'Chọn kích thước trước khi thêm vào giỏ.',
     );
@@ -99,13 +104,16 @@ describe('ProductCard', () => {
     });
     const user = userEvent.setup();
     render(<ProductCard product={product} />);
-    await user.click(screen.getByRole('button', { name: 'Thêm nhanh' }));
+    await user.click(screen.getByRole('button', { name: 'Mua ngay' }));
     await user.click(screen.getByRole('radio', { name: 'M' }));
-    await user.click(screen.getByRole('button', { name: 'Thêm vào giỏ' }));
+    const dialog = screen.getByRole('dialog');
+    await user.click(within(dialog).getByRole('button', { name: 'Mua ngay' }));
+    // SKU is built color-aware (`${productId}-${colorId}-${sizeId}`) so it
+    // resolves against the cart store's authoritative SKU list.
     expect(quickAdd).toHaveBeenCalledWith({
       productId: 'product-1',
       quantity: 1,
-      skuId: 'sku-m',
+      skuId: 'product-1-bone-m',
     });
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'Sản phẩm vừa thay đổi.',

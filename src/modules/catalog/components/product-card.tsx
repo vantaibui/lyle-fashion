@@ -1,6 +1,7 @@
 'use client';
 
 import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { ProductBadgeGroup } from '@/components/commerce/product-badge-group';
@@ -28,6 +29,7 @@ export function ProductCard({
   eager?: boolean;
   product: ProductSummary;
 }) {
+  const router = useRouter();
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -39,7 +41,6 @@ export function ProductCard({
     product.colors[0]?.colorId,
   );
   const [selectedSizeId, setSelectedSizeId] = useState<string>();
-  const [shouldRenderHover, setShouldRenderHover] = useState(false);
   const [wishlistPending, setWishlistPending] = useState(false);
   const selectedColor =
     product.colors.find((color) => color.colorId === selectedColorId) ??
@@ -67,7 +68,7 @@ export function ProductCard({
     }
   }
 
-  function openQuickAdd() {
+  function openBuyNow() {
     if (isOutOfStock) return;
     setQuickAddError(undefined);
     setQuickAddSuccess(false);
@@ -89,13 +90,27 @@ export function ProductCard({
 
     setQuickAddPending(true);
     setQuickAddError(undefined);
+    // The cart store's authoritative SKU id is color-aware
+    // (`${productId}-${colorId}-${sizeId}`). Build the same shape from the
+    // selected colour so validation resolves against the product's SKU list.
+    const colorId = selectedColor?.colorId;
+    const skuId = colorId
+      ? `${product.id}-${colorId}-${size.sizeId}`
+      : size.skuId;
     const response = await quickAddToCart({
       productId: product.id,
       quantity: 1,
-      skuId: size.skuId,
+      skuId,
     });
     setQuickAddPending(false);
     if (response.error) {
+      // Toast stays generic; log the real error for debugging.
+      console.error('Quick add to cart failed', {
+        productId: product.id,
+        skuId,
+        code: response.error.code,
+        message: response.error.message,
+      });
       setQuickAddError(
         response.error.code === 'INVENTORY_CONFLICT' ||
           response.error.code === 'PRICING_CONFLICT'
@@ -105,11 +120,12 @@ export function ProductCard({
       return;
     }
     setQuickAddSuccess(true);
-    dispatchCartUpdated({ openDrawer: true, source: 'plp' });
+    dispatchCartUpdated({ source: 'plp' });
     noStorefrontAnalytics({
-      name: 'quick_add',
+      name: 'begin_checkout',
       properties: { productId: product.id },
     });
+    router.push('/checkout');
   }
 
   return (
@@ -153,6 +169,11 @@ export function ProductCard({
               >
                 {product.name}
               </NextLink>
+              {product.materialLabel && (
+                <p className="text-text-subtle mt-1 text-xs">
+                  {product.materialLabel}
+                </p>
+              )}
               <ProductPrice
                 amount={product.price}
                 className="mt-2"
@@ -187,23 +208,32 @@ export function ProductCard({
                   ? 'Sắp hết hàng'
                   : ''}
             </p>
-            <Button
-              className="w-full lg:opacity-0 lg:group-focus-within:opacity-100 lg:group-hover:opacity-100"
-              disabled={isOutOfStock}
-              onClick={openQuickAdd}
-              size="sm"
-              variant="secondary"
-            >
-              {isOutOfStock ? 'Hết hàng' : 'Thêm nhanh'}
-            </Button>
+            {product.isBundle ? (
+              // Bundles are completed on the PDP (grouped bundle intent), not via
+              // the simple card add-to-cart path.
+              <NextLink
+                className="bg-action text-text-inverse hover:bg-action-hover inline-flex min-h-9 w-full items-center justify-center rounded-sm px-5 text-sm font-medium tracking-wide no-underline transition-colors"
+                href={`/product/${product.slug}`}
+              >
+                Xem chi tiết
+              </NextLink>
+            ) : (
+              <Button
+                className="w-full"
+                disabled={isOutOfStock}
+                onClick={openBuyNow}
+                size="sm"
+                variant="primary"
+              >
+                {isOutOfStock ? 'Hết hàng' : 'Mua ngay'}
+              </Button>
+            )}
           </div>
         }
         media={
           <NextLink
             aria-label={`Xem ${product.name}`}
             href={`/product/${product.slug}`}
-            onFocus={() => setShouldRenderHover(true)}
-            onPointerEnter={() => setShouldRenderHover(true)}
           >
             <ProductImage
               alt={currentImage.alt}
@@ -215,15 +245,6 @@ export function ProductCard({
               onLoad={() => setImageLoading(false)}
               src={currentImage.src}
             />
-            {shouldRenderHover && product.hoverImage && (
-              <ProductImage
-                alt=""
-                aria-hidden="true"
-                className="opacity-0 transition-opacity duration-[var(--duration-normal)] group-focus-within:opacity-100 group-hover:opacity-100 motion-reduce:transition-none"
-                containerClassName="absolute inset-0"
-                src={product.hoverImage.src}
-              />
-            )}
             {imageLoading && <Skeleton className="absolute inset-0" />}
             {imageError && (
               <span className="bg-surface-muted text-text-muted absolute inset-0 grid place-items-center p-6 text-center text-sm">
@@ -238,7 +259,7 @@ export function ProductCard({
         isLoading={quickAddPending}
         isOpen={isQuickAddOpen}
         onClose={() => setIsQuickAddOpen(false)}
-        title="Chọn kích thước"
+        title="Mua ngay"
       >
         <SizeSelector
           disabled={quickAddPending || quickAddSuccess}
@@ -262,7 +283,7 @@ export function ProductCard({
           isLoading={quickAddPending}
           onClick={() => void submitQuickAdd()}
         >
-          {quickAddSuccess ? 'Đã thêm vào giỏ' : 'Thêm vào giỏ'}
+          {quickAddSuccess ? 'Đang chuyển đến thanh toán…' : 'Mua ngay'}
         </Button>
       </Dialog>
     </>

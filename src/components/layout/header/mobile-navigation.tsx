@@ -55,7 +55,10 @@ export function MobileNavigation({ groups }: { groups: NavigationGroup[] }) {
             <nav aria-label={`Danh mục ${activeGroup.label}`}>
               <ul role="list">
                 {activeGroup.items.map((item) => (
-                  <li className="border-border-subtle border-b" key={item.href}>
+                  <li
+                    className="border-border-subtle border-b"
+                    key={`${item.href}-${item.label}`}
+                  >
                     <Link
                       className="w-full py-2 no-underline"
                       href={item.href}

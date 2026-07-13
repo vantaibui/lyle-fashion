@@ -8,8 +8,23 @@ import { normalizeSearchQuery } from '@/modules/search/utils/normalize-query';
 
 // Temporary development adapter. These concepts are navigation/search fixtures,
 // not authoritative products, prices, availability, or production search data.
+const productHref = (name: string) =>
+  `/search?${new URLSearchParams({ q: name })}`;
+
 const mockSuggestions: SearchSuggestionResult = {
-  products: [],
+  products: [
+    'Áo sơ mi Linen tối giản',
+    'Áo Lyocell cổ tròn',
+    'Quần Linen ống thẳng',
+    'Đầm Lyocell dáng suông',
+    'Chân váy Linen midi',
+    'Áo thun Linen cổ tròn',
+  ].map((label, index) => ({
+    id: `product-${index}`,
+    kind: 'product' as const,
+    label,
+    href: productHref(label),
+  })),
   categories: [
     {
       id: 'category-men-shirts',
@@ -28,6 +43,30 @@ const mockSuggestions: SearchSuggestionResult = {
       kind: 'category',
       label: 'Quần Linen',
       href: '/shop?material=linen&category=pants',
+    },
+    {
+      id: 'material-linen',
+      kind: 'category',
+      label: 'Chất liệu Linen',
+      href: '/shop?material=linen',
+    },
+    {
+      id: 'material-lyocell',
+      kind: 'category',
+      label: 'Chất liệu Lyocell',
+      href: '/shop?material=lyocell',
+    },
+    {
+      id: 'color-moss',
+      kind: 'category',
+      label: 'Màu Rêu',
+      href: '/shop?color=moss',
+    },
+    {
+      id: 'color-clay',
+      kind: 'category',
+      label: 'Màu Đất',
+      href: '/shop?color=clay',
     },
   ],
   collections: [

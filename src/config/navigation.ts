@@ -28,6 +28,9 @@ export type NavigationItem = z.infer<typeof navigationItemSchema>;
 export type NavigationGroup = z.infer<typeof navigationGroupSchema>;
 export type StorefrontNavigation = z.infer<typeof storefrontNavigationSchema>;
 
+// LYLE storefront navigation: women-first shopping groups plus a "Nam" group
+// mapped to this project's /men route and men's catalog. Hrefs point to routes
+// that already exist so no menu link 404s.
 export const storefrontNavigation = storefrontNavigationSchema.parse({
   announcement: {
     href: '/material-guide',
@@ -36,59 +39,75 @@ export const storefrontNavigation = storefrontNavigationSchema.parse({
   groups: [
     {
       id: 'men',
-      label: 'Nam',
+      label: 'Thời Trang Nam',
       items: [
-        { href: '/men?category=t-shirts', label: 'Áo thun' },
-        { href: '/men?category=shirts', label: 'Áo sơ mi' },
-        { href: '/men?category=pants', label: 'Quần dài' },
-        { href: '/men?category=shorts', label: 'Quần short' },
-        { href: '/men?category=casual-sets', label: 'Bộ thường ngày' },
-        { href: '/men?category=premium-sets', label: 'Bộ cao cấp' },
-        { href: '/men', label: 'Xem tất cả' },
+        { href: '/men?category=t-shirts', label: 'Áo Thun' },
+        { href: '/men?category=shirts', label: 'Áo Sơ Mi' },
+        { href: '/men?category=pants', label: 'Quần Dài' },
+        { href: '/men?category=shorts', label: 'Quần Short' },
+        { href: '/men?category=casual-sets', label: 'Bộ Thường Ngày' },
+        { href: '/men?category=premium-sets', label: 'Bộ Cao Cấp' },
+        { href: '/men', label: 'Xem Tất Cả' },
       ],
     },
     {
       id: 'women',
-      label: 'Nữ',
+      label: 'Thời Trang Nữ',
       items: [
-        { href: '/women?category=t-shirts', label: 'Áo thun' },
-        { href: '/women?category=shirts', label: 'Áo sơ mi' },
-        { href: '/women?category=pants', label: 'Quần dài' },
-        { href: '/women?category=skirts', label: 'Chân váy' },
         { href: '/women?category=dresses', label: 'Đầm' },
-        { href: '/women?category=casual-sets', label: 'Bộ thường ngày' },
-        { href: '/women?category=premium-sets', label: 'Bộ cao cấp' },
-        { href: '/women', label: 'Xem tất cả' },
+        { href: '/women?category=shirts', label: 'Áo' },
+        { href: '/women?category=skirts', label: 'Chân Váy' },
+        { href: '/women?category=pants', label: 'Quần' },
+        { href: '/women', label: 'Xem Tất Cả' },
+      ],
+    },
+    {
+      id: 'accessories',
+      label: 'Phụ Kiện',
+      items: [
+        { href: '/shop?category=shoes', label: 'Giày / Dép' },
+        { href: '/shop?category=bags', label: 'Túi' },
+        { href: '/shop?category=accessories', label: 'Phụ Kiện' },
       ],
     },
     {
       id: 'collections',
-      label: 'Bộ sưu tập',
+      label: 'Bộ Sưu Tập',
       items: [
-        { href: '/collections/new-arrival', label: 'Hàng mới' },
-        { href: '/collections/best-seller', label: 'Bán chạy' },
-        { href: '/collections/eco-collection', label: 'Bộ sưu tập Eco' },
+        { href: '/collections/new-arrival', label: 'Hàng Mới' },
+        { href: '/collections/best-seller', label: 'Bán Chạy' },
+        { href: '/collections/eco-collection', label: 'Bộ Sưu Tập Eco' },
         {
           href: '/collections/premium-collection',
-          label: 'Bộ sưu tập cao cấp',
+          label: 'Bộ Sưu Tập Cao Cấp',
         },
-        { href: '/collections/linen-collection', label: 'Bộ sưu tập Linen' },
+        { href: '/collections/linen-collection', label: 'Bộ Sưu Tập Linen' },
         {
           href: '/collections/lyocell-collection',
-          label: 'Bộ sưu tập Lyocell',
+          label: 'Bộ Sưu Tập Lyocell',
         },
       ],
     },
     {
-      id: 'discover',
-      label: 'Khám phá',
+      id: 'shop-the-look',
+      label: 'Shop The Look',
       items: [
         { href: '/lookbook', label: 'Lookbook' },
-        { href: '/lookbook?view=shop-the-look', label: 'Shop the Look' },
-        { href: '/material-guide', label: 'Hướng dẫn chất liệu' },
-        { href: '/sustainability', label: 'Phát triển bền vững' },
-        { href: '/journal', label: 'Tạp chí' },
-        { href: '/stores', label: 'Cửa hàng' },
+        { href: '/lookbook?view=shop-the-look', label: 'Shop The Look' },
+        { href: '/collections/new-arrival', label: 'Online Exclusives' },
+      ],
+    },
+    {
+      id: 'discover',
+      label: 'Khám Phá',
+      items: [
+        { href: '/lookbook', label: 'Gợi Ý Mua Sắm Từ Nhân Viên' },
+        { href: '/journal', label: 'LYLE Story' },
+        { href: '/account', label: 'Thẻ Thành Viên' },
+        { href: '/material-guide', label: 'Hướng Dẫn Chất Liệu' },
+        { href: '/sustainability', label: 'ESG - Phát Triển Bền Vững' },
+        { href: '/stores', label: 'Hệ Thống Cửa Hàng' },
+        { href: '/contact', label: 'Thông Tin' },
       ],
     },
   ],

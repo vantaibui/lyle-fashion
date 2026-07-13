@@ -133,7 +133,7 @@ export function DesktopNavigation({ groups }: DesktopNavigationProps) {
                       {group.items.map((item) => (
                         <li
                           className="border-border-subtle border-b"
-                          key={item.href}
+                          key={`${item.href}-${item.label}`}
                         >
                           <Link
                             className="w-full justify-between py-2 no-underline"

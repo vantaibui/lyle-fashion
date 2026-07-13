@@ -52,9 +52,11 @@ export type ProductSummary = {
   compareAtPrice?: number;
   discountPercentageAllowed?: boolean;
   gender: CatalogGender;
-  hoverImage?: CatalogImage;
   id: string;
+  /** Bundle products are completed on the PDP, not via simple card add-to-cart. */
+  isBundle?: boolean;
   lowStockThreshold?: number;
+  materialLabel?: string;
   name: string;
   price: number;
   primaryImage: CatalogImage;
@@ -119,6 +121,7 @@ export type CatalogQuery = {
   pageSize: number;
   priceTier?: string[];
   promotion?: string[];
+  q?: string;
   size?: string[];
   sort: CatalogSort;
   style?: string[];

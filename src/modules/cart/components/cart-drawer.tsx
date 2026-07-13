@@ -128,7 +128,7 @@ export function CartDrawer({
           <ErrorState
             action={
               <button
-                className="underline-offset-4 hover:underline"
+                className="text-text hover:text-action-muted inline-flex min-h-11 cursor-pointer items-center underline underline-offset-4 transition-colors duration-[var(--duration-fast)]"
                 onClick={() => void refreshCart()}
                 type="button"
               >
@@ -163,8 +163,15 @@ export function CartDrawer({
               title={isLoading ? 'Đang đồng bộ giỏ hàng…' : 'Tóm tắt'}
             />
             <div className="grid gap-3">
-              <Link href="/cart">Xem giỏ hàng</Link>
-              <Link href="/checkout">Tiến hành thanh toán</Link>
+              <Link
+                className="bg-action text-text-inverse hover:bg-action-hover inline-flex min-h-11 w-full items-center justify-center rounded-sm px-5 text-sm font-medium tracking-wide no-underline transition-colors duration-[var(--duration-fast)]"
+                href="/checkout"
+              >
+                Tiến hành thanh toán
+              </Link>
+              <Link className="justify-center" href="/cart">
+                Xem giỏ hàng
+              </Link>
             </div>
           </>
         )}

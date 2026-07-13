@@ -1,16 +1,28 @@
 import type { ProductSummary } from '@/modules/catalog/contracts/catalog';
+import { demoImagesForSeed } from '@/modules/catalog/api/coolmate-demo-images';
 import type {
   ProductDetail,
   ProductDetailProvider,
   ProductSku,
 } from '@/modules/product/contracts/product';
 
-const image = (file: string, alt: string) => ({
+// Real elise.vn garment photo (4:5) for the PDP gallery. See elise-demo-images.
+const eliseImage = (src: string, alt: string) => ({
   alt,
-  height: 1500,
-  src: `/images/catalog/${file}`,
-  width: 1200,
+  height: 750,
+  src,
+  width: 600,
 });
+
+/**
+ * Resolve a product's demo image pair from its `mock-product-N` id (1-based).
+ * Men's seeds resolve to coolmate.me, women's to elise.vn (see demoImagesForSeed).
+ */
+function demoImagesForId(id: string) {
+  const parsed = Number.parseInt(id.replace(/^mock-product-/, ''), 10);
+  const index = Number.isFinite(parsed) ? parsed - 1 : 0;
+  return demoImagesForSeed(index);
+}
 
 const sharedColors = {
   bone: { colorId: 'bone', label: 'Ngà', swatchHex: '#E5E0D5' },
@@ -47,14 +59,11 @@ type MockSeed = {
   sustainabilityNote: string;
 };
 
-function variantImages(name: string, colorLabel: string) {
+function variantImages(id: string, name: string, colorLabel: string) {
+  const demo = demoImagesForId(id);
   return [
-    image('linen-bone.svg', `${name} màu ${colorLabel} nhìn chính diện`),
-    image('linen-detail.svg', `Chi tiết bề mặt chất liệu của ${name}`),
-    image(
-      'linen-moss.svg',
-      `${name} màu ${colorLabel} trong phối cảnh biên tập`,
-    ),
+    eliseImage(demo.primary, `${name} màu ${colorLabel} nhìn chính diện`),
+    eliseImage(demo.alternate, `${name} màu ${colorLabel} — góc chụp khác`),
   ];
 }
 
@@ -77,7 +86,7 @@ function buildSimpleSkus(seed: MockSeed): ProductSku[] {
             : seed.price >= 699000
               ? seed.price + 90000
               : undefined,
-        images: variantImages(seed.name, sharedColors[colorKey].label),
+        images: variantImages(seed.id, seed.name, sharedColors[colorKey].label),
         price: seed.price,
         sizeId: size.sizeId,
         skuId: `${seed.id}-${colorKey}-${size.sizeId}`,
@@ -416,7 +425,6 @@ function toRecommendationSummary(product: ProductDetail): ProductSummary {
         : product.genderLabel === 'Nữ'
           ? 'women'
           : 'unisex',
-    hoverImage: product.defaultGallery[1] ?? fallbackImage,
     id: product.id,
     lowStockThreshold: undefined,
     name: product.name,
@@ -454,8 +462,8 @@ function buildBundle(seed: MockSeed) {
           componentId: 'bundle-7-top',
           description: 'Áo sơ mi Linen cùng tông, giữ bố cục set gọn và sáng.',
           fixedColor: sharedColors.moss,
-          image: image(
-            'linen-moss.svg',
+          image: eliseImage(
+            demoImagesForId('mock-product-1').primary,
             'Áo sơ mi trong bộ Linen thường ngày nam',
           ),
           productId: 'mock-product-1',
@@ -476,8 +484,8 @@ function buildBundle(seed: MockSeed) {
           description:
             'Quần short Linen đồng màu, ưu tiên cảm giác thoáng và đồng bộ.',
           fixedColor: sharedColors.moss,
-          image: image(
-            'linen-detail.svg',
+          image: eliseImage(
+            demoImagesForId('mock-product-4').primary,
             'Quần short trong bộ Linen thường ngày nam',
           ),
           productId: 'mock-product-4',
@@ -510,7 +518,10 @@ function buildBundle(seed: MockSeed) {
           componentId: 'bundle-8-top',
           description: 'Áo Lyocell mềm nhẹ để giữ phần thân trên gọn và rủ.',
           fixedColor: sharedColors.clay,
-          image: image('linen-clay.svg', 'Áo trong bộ Lyocell cao cấp nữ'),
+          image: eliseImage(
+            demoImagesForId('mock-product-3').primary,
+            'Áo trong bộ Lyocell cao cấp nữ',
+          ),
           productId: 'mock-product-3',
           productName: 'Áo Lyocell cổ tròn',
           productSlug: 'san-pham-minh-hoa-3',
@@ -529,8 +540,8 @@ function buildBundle(seed: MockSeed) {
           description:
             'Chân váy midi cùng tông để giữ cảm giác premium nhưng gần gũi.',
           fixedColor: sharedColors.clay,
-          image: image(
-            'linen-detail.svg',
+          image: eliseImage(
+            demoImagesForId('mock-product-6').primary,
             'Chân váy trong bộ Lyocell cao cấp nữ',
           ),
           productId: 'mock-product-6',
@@ -562,7 +573,10 @@ function buildBundle(seed: MockSeed) {
         componentId: 'bundle-12-top',
         description: 'Áo sơ mi cùng tông giữ phần trên gọn và sáng.',
         fixedColor: sharedColors.moss,
-        image: image('linen-moss.svg', 'Áo trong bộ Linen cao cấp nam'),
+        image: eliseImage(
+          demoImagesForId('mock-product-1').primary,
+          'Áo trong bộ Linen cao cấp nam',
+        ),
         productId: 'mock-product-1',
         productName: 'Áo sơ mi Linen tối giản',
         productSlug: 'san-pham-minh-hoa-1',
@@ -580,7 +594,10 @@ function buildBundle(seed: MockSeed) {
         componentId: 'bundle-12-bottom',
         description: 'Quần Linen thường ngày đồng tông cho outfit hoàn chỉnh.',
         fixedColor: sharedColors.moss,
-        image: image('linen-detail.svg', 'Quần trong bộ Linen cao cấp nam'),
+        image: eliseImage(
+          demoImagesForId('mock-product-10').primary,
+          'Quần trong bộ Linen cao cấp nam',
+        ),
         productId: 'mock-product-10',
         productName: 'Quần Linen thường ngày',
         productSlug: 'san-pham-minh-hoa-10',
@@ -611,7 +628,7 @@ const mockProducts: ProductDetail[] = seeds.map((seed) => {
   const skus = buildSimpleSkus(seed);
   const defaultGallery =
     skus.find((sku) => sku.colorId === defaultColor.colorId)?.images ??
-    variantImages(seed.name, defaultColor.label);
+    variantImages(seed.id, seed.name, defaultColor.label);
   const bundle = buildBundle(seed);
   return {
     badges: seed.badges ?? [],

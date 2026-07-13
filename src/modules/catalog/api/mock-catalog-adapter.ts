@@ -1,6 +1,10 @@
+import { demoImagesForSeed } from '@/modules/catalog/api/coolmate-demo-images';
+import { demoProductImages } from '@/modules/catalog/api/elise-demo-images';
+import { getMockProductById } from '@/modules/product/api/mock-product-adapter';
 import type {
   CatalogFilterFacet,
   CatalogGender,
+  CatalogImage,
   CatalogLandingContent,
   CatalogLandingProvider,
   CatalogQuery,
@@ -21,46 +25,53 @@ type MockProduct = ProductSummary & {
   salesRank: number;
 };
 
-const image = (file: string, alt: string) => ({
+// Real elise.vn garment photo for a product card (4:5). See elise-demo-images.
+const productImage = (src: string, alt: string): CatalogImage => ({
   alt,
-  height: 1500,
-  src: `/images/catalog/${file}`,
-  width: 1200,
+  height: 750,
+  src,
+  width: 600,
 });
+
+// Display labels for a product's primary material (shown on the card).
+const materialLabels: Record<string, string> = {
+  linen: 'Linen',
+  lyocell: 'Lyocell',
+};
 
 const colors = {
   bone: {
     colorId: 'bone',
-    image: image(
-      'linen-bone.svg',
-      'Trang phục Linen màu ngà trên nền trung tính',
+    image: productImage(
+      demoProductImages(0).primary,
+      'Trang phục màu ngà trên nền trung tính',
     ),
     label: 'Ngà',
     swatchHex: '#E5E0D5',
   },
   ink: {
     colorId: 'ink',
-    image: image(
-      'linen-ink.svg',
-      'Trang phục Linen màu mực trên nền trung tính',
+    image: productImage(
+      demoProductImages(7).primary,
+      'Trang phục màu mực trên nền trung tính',
     ),
     label: 'Mực',
     swatchHex: '#20211D',
   },
   moss: {
     colorId: 'moss',
-    image: image(
-      'linen-moss.svg',
-      'Trang phục Linen màu rêu trên nền trung tính',
+    image: productImage(
+      demoProductImages(2).primary,
+      'Trang phục màu rêu trên nền trung tính',
     ),
     label: 'Rêu',
     swatchHex: '#4E5A42',
   },
   clay: {
     colorId: 'clay',
-    image: image(
-      'linen-clay.svg',
-      'Trang phục Linen màu đất trên nền trung tính',
+    image: productImage(
+      demoProductImages(9).primary,
+      'Trang phục màu đất trên nền trung tính',
     ),
     label: 'Đất',
     swatchHex: '#8A5A44',
@@ -105,7 +116,7 @@ const mockProductSeeds: MockProductSeed[] = [
   ],
   [
     'Áo Lyocell cổ tròn',
-    'women',
+    'unisex',
     't-shirts',
     399000,
     colors.moss,
@@ -201,14 +212,29 @@ const mockProducts: MockProduct[] = mockProductSeeds.map((entry, index) => {
   const id = `mock-product-${index + 1}`;
   const slug = `san-pham-minh-hoa-${index + 1}`;
   const compareAtPrice = index === 4 ? 799000 : undefined;
+  const demoImages = demoImagesForSeed(index);
+  // Placeholder colour carrying this product's own primary photo. The real
+  // colour set and authoritative SKUs are overlaid lazily from the product/cart
+  // store at request time (see `withStoreVariants`) to avoid a module-eval-time
+  // circular dependency between the catalog and product adapters.
+  const primaryColorWithImage: ProductCardColorOption = {
+    ...primaryColor,
+    image: productImage(demoImages.primary, name),
+  };
+  const badges: MockProduct['badges'] = [];
+  if (index < 2) {
+    badges.push({ id: `${id}-new`, kind: 'new', label: 'Mới' });
+  }
+  if (materials.includes('lyocell')) {
+    badges.push({ id: `${id}-eco`, kind: 'sustainable', label: 'Eco' });
+  }
+  if (index === 7) {
+    badges.push({ id: `${id}-best`, kind: 'best-seller', label: 'Bán chạy' });
+  }
   return {
-    badges: index < 2 ? [{ id: `${id}-badge`, kind: 'new', label: 'Mới' }] : [],
+    badges,
     categoryId: category,
-    colors: [primaryColor, colors.bone, colors.ink].filter(
-      (color, colorIndex, all) =>
-        all.findIndex((candidate) => candidate.colorId === color.colorId) ===
-        colorIndex,
-    ),
+    colors: [primaryColorWithImage],
     compareAtPrice,
     discountPercentageAllowed: compareAtPrice !== undefined,
     filterValues: {
@@ -221,19 +247,16 @@ const mockProducts: MockProduct[] = mockProductSeeds.map((entry, index) => {
       styles,
     },
     gender,
-    hoverImage: image('linen-detail.svg', `Chi tiết chất liệu của ${name}`),
     id,
     lowStockThreshold: index === 5 ? 3 : undefined,
+    materialLabel: materialLabels[materials[0] ?? ''] ?? undefined,
     name,
     price,
-    primaryImage: primaryColor.image,
+    primaryImage: productImage(demoImages.primary, name),
     rank: index,
     requiresSizeSelection: true,
     salesRank: (index * 7) % 12,
-    sizes: standardSizes.map((size) => ({
-      ...size,
-      skuId: `${id}-${size.sizeId}`,
-    })),
+    sizes: standardSizes,
     slug,
     stockLevel:
       index === 10 ? 'out-of-stock' : index === 5 ? 'low-stock' : 'in-stock',
@@ -251,6 +274,7 @@ const facetDefinitions: Array<{
     options: [
       { label: 'Nam', value: 'men' },
       { label: 'Nữ', value: 'women' },
+      { label: 'Unisex', value: 'unisex' },
     ],
   },
   {
@@ -337,10 +361,25 @@ const facetDefinitions: Array<{
   },
 ];
 
+function matchesKeyword(product: MockProduct, q: string | undefined) {
+  const term = q?.trim().toLocaleLowerCase('vi-VN');
+  if (!term) return true;
+  const haystack = [
+    product.name,
+    product.filterValues.category,
+    ...product.filterValues.materials,
+    ...product.colors.map((color) => color.label),
+  ]
+    .join(' ')
+    .toLocaleLowerCase('vi-VN');
+  return haystack.includes(term);
+}
+
 function matches(product: MockProduct, query: CatalogQuery) {
   const includes = (values: string[] | undefined, candidates: string[]) =>
     !values?.length || values.some((value) => candidates.includes(value));
   return (
+    matchesKeyword(product, query.q) &&
     includes(query.gender, [product.gender]) &&
     includes(query.category, [product.filterValues.category]) &&
     includes(query.collection, product.filterValues.collections) &&
@@ -389,13 +428,61 @@ function buildFacets(products: MockProduct[]): CatalogFilterFacet[] {
   }));
 }
 
+/**
+ * Overlay the product/cart store's authoritative colours and SKU ids onto a card
+ * summary. Called lazily at request time (not module-eval) so the product adapter
+ * is fully initialized, avoiding a circular-import init-order bug. The store is the
+ * single source of truth the cart validates against, so the card offers exactly the
+ * colours/SKUs that will succeed on add-to-cart.
+ */
+function withStoreVariants(product: MockProduct): MockProduct {
+  const storeProduct = getMockProductById(product.id);
+  if (!storeProduct || storeProduct.colors.length === 0) return product;
+
+  const primaryImage = product.colors[0]?.image ?? product.primaryImage;
+  const cardColors: ProductCardColorOption[] = storeProduct.colors.map(
+    (color, colorIndex) => ({
+      colorId: color.colorId,
+      image:
+        colorIndex === 0
+          ? primaryImage
+          : (colors[color.colorId as keyof typeof colors]?.image ??
+            primaryImage),
+      label: color.label,
+      swatchHex: color.swatchHex,
+    }),
+  );
+  const defaultColorId = cardColors[0]?.colorId;
+  const cardSizes = standardSizes.map((size) => {
+    const sku = storeProduct.skus.find(
+      (candidate) =>
+        candidate.colorId === defaultColorId &&
+        candidate.sizeId === size.sizeId,
+    );
+    return {
+      available: sku?.available ?? size.available,
+      label: size.label,
+      sizeId: size.sizeId,
+      skuId: sku?.skuId ?? size.skuId,
+    };
+  });
+  return {
+    ...product,
+    colors: cardColors,
+    isBundle: storeProduct.kind === 'bundle',
+    sizes: cardSizes,
+  };
+}
+
 export const mockCatalogAdapter: CatalogResultProvider = async (query) => {
   const filtered = sortProducts(
     mockProducts.filter((product) => matches(product, query)),
     query.sort,
   );
   const start = (query.page - 1) * query.pageSize;
-  const products = filtered.slice(start, start + query.pageSize);
+  const products = filtered
+    .slice(start, start + query.pageSize)
+    .map(withStoreVariants);
   return {
     data: {
       facets: buildFacets(mockProducts),
